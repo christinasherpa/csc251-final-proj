@@ -13,7 +13,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 target = input('Input website to scan: ')
 
-def pscan(port):
+def npscan(port):
     try:
         con = s.connect((target,port))
         return True
@@ -23,7 +23,7 @@ def pscan(port):
 
 
 for x in range(1024):
-    if pscan(x):
+    if npscan(x):
         print('Port',x,'is open')
 
 
