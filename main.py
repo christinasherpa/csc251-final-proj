@@ -8,7 +8,7 @@ import socket
 from datetime import *
 import os
 
-
+##
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 target = input('Input website to scan: ')
@@ -28,6 +28,7 @@ for x in range(1024):
     else:
         print('Port',x,'is closed')
 
+##
 
 def main(SOMEHOST):
 
