@@ -13,18 +13,20 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 target = input('Input website to scan: ')
 
+#will go into Scanner class
 def npscan(port):
     try:
         con = s.connect((target,port))
         return True
     except:
-        print('Port',x,'is closed')
         return False
 
 
 for x in range(1024):
     if npscan(x):
         print('Port',x,'is open')
+    else:
+        print('Port',x,'is closed')
 
 
 def main(SOMEHOST):
