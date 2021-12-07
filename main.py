@@ -9,6 +9,24 @@ from datetime import *
 import os
 
 
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+target = input('Input website to scan: ')
+
+def pscan(port):
+    try:
+        con = s.connect((target,port))
+        return True
+    except:
+        print('Port',x,'is closed')
+        return False
+
+
+for x in range(1024):
+    if pscan(x):
+        print('Port',x,'is open')
+
+
 def main(SOMEHOST):
 
     SOMEHOST = "192.168.1.30"
