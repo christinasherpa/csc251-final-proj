@@ -30,27 +30,35 @@ for x in range(1024):
 
 ##
 
-#checking if IP is alive
+
 def main():
-    #user_ip = input("Please input an IP Adress: ")
-    user_ip = "131.229.72.13"
-    ret = os.system("ping -o -c 3 -W 3000 " + user_ip)
+
+    #getting args from the command line 
+    
+    ports= sys.argv[1] 
+    if ports == "all":
+        num_ports= 65535
+    elif ports == "known":
+        num_ports = 1024
+    order= sys.argv[2] 
+    target_ip = sys.argv[3] 
+
+    #user_ip = "131.229.72.13"
+    ret = os.system("ping -o -c 3 -W 3000 " + target_ip)
     print(ret)
     if ret == 0:
         print("IP is alive...proceeding. ")
-        #probe(user_ip, 65535)
-        #probe(user_ip, 1024)
-
-        probe(user_ip, 5) #for test run
-        probe_rand(user_ip,5)
+        if order == "random":
+            probe_rand(target_ip, 10)
+        elif order == "seq":
+            probe(target_ip, 10) #for test run
     else:
         print("IP is not alive, please try again. ")
         
 
-#have to give them the option of choosing randon or seq
+  
 
-
-def probe(user_ip, x):
+def probe(target_ip, x):
     open_count = 0
     close_count = 0
 
@@ -66,17 +74,22 @@ def probe(user_ip, x):
         start_clock = datetime.now()
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.02)
-        result = sock.connect_ex((user_ip, port))
+        result = sock.connect_ex((target_ip, port))
+
         try:
-            service = socket.getservbyport(x) 
+            service = socket.getservbyport(port) 
         except OSError:
-            servive  = "Unknown"
+            service  = "Unknown"
+
+
         if result == 0:
             print("Port {}/ {}: Open".format(port, service)) #printing what ports are open 
             open_count = open_count +1 
         else:
-            print("Port {}/{}: Close".format(port, service))  #printing what ports are closed
+            print("Port {}/ {}: Close".format(port, service))  #printing what ports are closed
             close_count = close_count +1 
+
+        
         sock.close()
     
     print("Number of open ports: {}".format(open_count))
@@ -86,7 +99,7 @@ def probe(user_ip, x):
     print("Scan done! IP address ({} Host up) scanned in {} seconds.\n".format(open_count, time))
 
 
-def probe_rand(user_ip, x):
+def probe_rand(target_ip, x):
     print("Probing ports in random order...")
     
     open_count = 0
@@ -100,11 +113,15 @@ def probe_rand(user_ip, x):
         start_clock = datetime.now()
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.02)
-        result = sock.connect_ex((user_ip, port))
+        result = sock.connect_ex((target_ip, port))
+
+    
         try:
-            service = socket.getservbyport(x) 
+            service = socket.getservbyport(port) 
         except OSError:
-            servive  = "Unknown"
+            service  = "Unknown"
+
+
         if result == 0:
             print("Port {}/ {}: Open".format(port, service)) #printing what ports are open 
             open_count = open_count +1 
@@ -125,14 +142,4 @@ main()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+#dont show closed ports 
