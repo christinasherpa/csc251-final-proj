@@ -9,24 +9,30 @@ from datetime import *
 import os
 
 ##
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+import socket
+#normal port scan
+ip = input("Enter the IP or address: ")
+#tester ip = 132.229.72.13
+#ports = []
+ports = range(1,1025)
+count = 0
 
-target = input('Input website to scan: ')
-
-#will go into Scanner class
-def npscan(port):
-    try:
-        con = s.connect((target,port))
-        return True
-    except:
-        return False
+#while count < 5:
+    #ports.append(int(input("enter the port: ")))
+    #count += 1
 
 
-for x in range(1024):
-    if npscan(x):
-        print('Port',x,'is open')
+for port in ports:
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.settimeout(0.05)
+    code = client.connect_ex((ip, port)) #connects and brings the error msg
+#return an error indicator instead of raising exception for errors
+    if code == 0: #0 = Success
+        print (str(port) + " -> Open")
     else:
-        print('Port',x,'is closed')
+        print (str(port) + " -> Closed")
+
+print ("Scan Finalized")
 
 ##
 
