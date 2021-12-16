@@ -13,14 +13,12 @@ import socket
 #normal port scan
 ip = input("Enter the IP or address: ")
 #tester ip = 132.229.72.13
-#ports = []
 ports = range(1,1025)
 count = 0
 
 #while count < 5:
     #ports.append(int(input("enter the port: ")))
     #count += 1
-
 
 for port in ports:
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,9 +33,20 @@ for port in ports:
 print ("Scan Finalized")
 ##
 
+from scapy.all import *
+#syn scan
+
+for port in range(20, 25):
+    packet = IP(dst="132.229.72.13")/TCP(sport=123,dport=(20,25),flags="S"))
+    sr(packet, timeout = 0.5)
+    if packet:
+        print("Port %d is open!" % port)
+    else:
+        print("Port %d is closed." % port)
+##
+
 #fin scan
 from scapy.all import *
-#import socket
 
 ip_info = IP(src="131.229.238.101", dst ="132.229.72.13")
 tcp_info = TCP(sport =1024, dport=(1,1024), flags="F", seq=12345)
