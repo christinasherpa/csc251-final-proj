@@ -33,16 +33,22 @@ for port in ports:
 print ("Scan Finalized")
 ##
 
-from scapy.all import *
 #syn scan
+from scapy.all import *
 
-for port in range(20, 25):
-    packet = IP(dst="132.229.72.13")/TCP(sport=123,dport=(20,25),flags="S"))
-    sr(packet, timeout = 0.5)
-    if packet:
-        print("Port %d is open!" % port)
-    else:
-        print("Port %d is closed." % port)
+ip_info = IP(dst="132.229.72.13")
+tcp_info = TCP(sport=123,dport=(20,25),flags="S")
+packets = ip_info/tcp_info
+
+#for port in range (0,26):
+    #if packet: #incorrect condition
+        #print("Port %d is open!" % port)
+    #else:
+        #print("Port %d is closed." % port)
+        
+p = sr(packets)
+p.show()
+
 ##
 #updated
 from scapy.all import *
