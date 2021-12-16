@@ -33,7 +33,17 @@ for port in ports:
         print (str(port) + " -> Closed")
 
 print ("Scan Finalized")
+##
 
+#fin scan
+from scapy.all import *
+#import socket
+
+ip_info = IP(src="131.229.238.101", dst ="132.229.72.13")
+tcp_info = TCP(sport =1024, dport=(1,1024), flags="F", seq=12345)
+packets = ip_info/tcp_info
+p = send(packets)
+p.show()
 ##
 
 
