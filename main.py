@@ -44,14 +44,14 @@ for port in range(20, 25):
     else:
         print("Port %d is closed." % port)
 ##
-
-#fin scan
+#updated
 from scapy.all import *
+#fin scan
 
 ip_info = IP(src="131.229.238.101", dst ="132.229.72.13")
-tcp_info = TCP(sport =1024, dport=(1,1024), flags="F", seq=12345)
+tcp_info = TCP(sport =1024, dport=range(1,10), flags="F", seq=12345)
 packets = ip_info/tcp_info
-p = send(packets)
+p = sr(packets)
 p.show()
 ##
 
