@@ -56,6 +56,22 @@ p.show()
 ##
 
 
+--------------------------------------------------------
+# CSC 251 Final Project 
+# Authors: Christina Sherpa and Mariah White 
+
+
+#131.229.72.13
+
+
+import sys
+import socket
+from datetime import *
+import os
+import random
+
+
+#checking if IP is alive
 def main():
 
     #getting args from the command line 
@@ -64,15 +80,32 @@ def main():
     if ports == "all":
         num_ports= 65535
     elif ports == "known":
-        num_ports = 1024
-    order= sys.argv[2] 
-    target_ip = sys.argv[3] 
+        num_ports = 25
+    order= sys.argv[2] #this is either random or seq 
+    target_ip = sys.argv[3] #IP that the user wants to use 
+
+    scan_type = sys.argv[4] #have the options be "all" or a apecific scan 
+    
+
+
 
     #user_ip = "131.229.72.13"
     ret = os.system("ping -o -c 3 -W 3000 " + target_ip)
     print(ret)
     if ret == 0:
         print("IP is alive...proceeding. ")
+
+
+        #implement 3 modes of scanning here 
+
+
+
+
+
+        if scan_type == "normal": #normal port scanning 
+            normal_scanning(num_ports, target_ip)
+
+        #probing all/known ports
         if order == "random":
             probe_rand(target_ip, 10)
         elif order == "seq":
@@ -80,7 +113,6 @@ def main():
     else:
         print("IP is not alive, please try again. ")
         
-
   
 
 def probe(target_ip, x):
@@ -161,6 +193,37 @@ def probe_rand(target_ip, x):
     time = end_clock-start_clock
     print("Scan done! IP address ({} host up) scanned in {} seconds.".format(open_count,time))
 
+
+def normal_scanning(x, target_ip):
+    print("Normal Port Scanning")
+    
+    open_count = 0
+    close_count = 0
+    for port in range(x):  
+        start_clock = datetime.now()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(0.02)
+        result = sock.connect_ex((target_ip, port))
+
+        try:
+            service = socket.getservbyport(port) 
+        except OSError:
+            service  = "Unknown"
+
+        if result == 0:
+            print("Port {}/ {}: Open".format(port, service)) #printing what ports are open 
+            open_count = open_count +1 
+        else:
+            print("Port {}/ {}: Close".format(port, service))  #printing what ports are closed
+            close_count = close_count +1 
+
+        sock.close()
+        
+    print("Number of open ports: {}".format(open_count))
+    print("Number of closed ports: {} ".format(close_count))
+    end_clock = datetime.now()
+    time = end_clock-start_clock
+    print("Normal scannign done! IP address ({} Host up) scanned in {} seconds.\n\n\n".format(open_count, time))
 
 
 main()
