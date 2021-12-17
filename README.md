@@ -11,6 +11,7 @@ command line usage:
 How the code runs: 
 - The code first checks if IP is alive or not. If it is alive, th following steps take place. 
 - The code first runs the type of specific scan (normal scanning, TCP SYN scanning, or TCP FIN scanning)
+- For these scans, you can change the IPs and range of ports manually. We did not include this in the command line because we didnt want to overwhelm our users. 
 - If those options aren't chosen, it runs all the scan types in random order 
 - Next, it runs probes all or known ports in either random or seqeuntial order 
 - When it runs, it gives the ports that are open or close and keeps a count as well. It also keep count of time. 
@@ -21,6 +22,18 @@ A discussion of at least one major challenge, and how you overcame it:
 
 Speficic contributions:
 
-- Mariah White:
+- Mariah White: worked on implementing the three distinct port types: normal port scan, tcp syn scan and tcp fin scan. Within the port scan, the main module used was socket. A client connection had to be created for each port. We were able to distinguish which ports were closed and open through print statements. Scapy was needed for the tcp syn and tcp fin scan which were similar in structure though each had different flag values set, signifying the type of scan. We decided to do away with classes for each port which was our initial idea, and left them inside their own functions.
 
-- Christina Sherpa:
+
+- Christina Sherpa: worked on the second portion of the project which was testing the life of the inputted ip, configuring probe functions for both sequential and random order, and determining how our code would display in the command line. The main tools used for these implementations were random, datetime and os modules. Ping was utilized to see if the ip is alive, which was true when our ret variable equals 0. For the random probe specifically, we had to make sure there wasn’t repetition of any one port scanned. This required a little more effort than probing in order. Within the command line, four arguments had to be set, determining the user’s preferences for the scan. These were the number of ports to be scanned, order, target ip and scan type. In displaying the results, a count was set to keep track of each individual closed and open port. There also had to be a way to record how long the scan took which was done using the datetime module, subtracting end time from start time. We had to then merge our three scan implementations with the working probe functions and make sure it seamlessly functioned in the command line as it should. 
+
+Citations:
+- https://www.geeksforgeeks.org/port-scanner-using-python/
+- https://www.oreilly.com/library/view/python-penetration-testing/9781789138962/9f389f41-4489-4628-a61f-969eea3aae8c.xhtml
+- https://www.meridianoutpost.com/resources/articles/well-known-tcpip-ports.php
+- https://medium.com/@avirj/nmap-tcp-syn-scan-50106f818bf1
+- https://pretagteam.com/question/python-check-if-ip-is-up-or-down
+- https://stackoverflow.com/questions/4033723/how-do-i-access-command-line-arguments
+- https://resources.infosecinstitute.com/topic/port-scanning-using-scapy/
+- https://osqa-ask.wireshark.org/questions/7896/number-of-open-ports/
+
