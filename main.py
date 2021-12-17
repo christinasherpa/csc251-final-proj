@@ -1,73 +1,5 @@
-#main file for storing all code 
-
-
 # CSC 251 Final Project 
 # Authors: Christina Sherpa and Mariah White 
-
-import socket
-from datetime import *
-import os
-
-##
-import socket
-#normal port scan
-ip = input("Enter the IP or address: ")
-#tester ip = 132.229.72.13
-ports = range(1,1025)
-count = 0
-
-#while count < 5:
-    #ports.append(int(input("enter the port: ")))
-    #count += 1
-
-for port in ports:
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.settimeout(0.05)
-    code = client.connect_ex((ip, port)) #connects and brings the error msg
-#return an error indicator instead of raising exception for errors
-    if code == 0: #0 = Success
-        print (str(port) + " -> Open")
-    else:
-        print (str(port) + " -> Closed")
-
-print ("Scan Finalized")
-##
-
-#syn scan
-from scapy.all import *
-
-ip_info = IP(dst="132.229.72.13")
-tcp_info = TCP(sport=123,dport=(20,25),flags="S")
-packets = ip_info/tcp_info
-
-#for port in range (0,26):
-    #if packet: #incorrect condition
-        #print("Port %d is open!" % port)
-    #else:
-        #print("Port %d is closed." % port)
-        
-p = sr(packets)
-p.show()
-
-##
-#updated
-from scapy.all import *
-#fin scan
-
-ip_info = IP(src="131.229.238.101", dst ="132.229.72.13")
-tcp_info = TCP(sport =1024, dport=range(1,10), flags="F", seq=12345)
-packets = ip_info/tcp_info
-p = sr(packets)
-p.show()
-##
-
-
---------------------------------------------------------
-# CSC 251 Final Project 
-# Authors: Christina Sherpa and Mariah White 
-
-
-#131.229.72.13
 
 
 import sys
@@ -75,41 +7,56 @@ import socket
 from datetime import *
 import os
 import random
+import scapy
 
 
-#checking if IP is alive
 def main():
 
     #getting args from the command line 
-    
     ports= sys.argv[1] 
     if ports == "all":
         num_ports= 65535
     elif ports == "known":
-        num_ports = 25
+        num_ports = 1024
     order= sys.argv[2] #this is either random or seq 
     target_ip = sys.argv[3] #IP that the user wants to use 
 
     scan_type = sys.argv[4] #have the options be "all" or a apecific scan 
     
-
-
-
-    #user_ip = "131.229.72.13"
+    #checks if IP is alive or not 
     ret = os.system("ping -o -c 3 -W 3000 " + target_ip)
-    print(ret)
+    #print(ret)
     if ret == 0:
         print("IP is alive...proceeding. ")
 
 
         #implement 3 modes of scanning here 
 
-
-
-
-
         if scan_type == "normal": #normal port scanning 
-            normal_scanning(num_ports, target_ip)
+            #normal_scanning(x, target_ip)
+            print("normal")
+        elif scan_type == "syn":
+            #syn_scanning()
+            print("syn")
+        elif scan_type == "fin":
+            #fin_scanning()
+            print("fin")
+        else:
+            lst = list(range(3))
+            random.seed
+            l1 = random.sample(lst, len(lst))
+
+            for a in l1:
+                if a==0:
+                    #normal_scanning(x, target_ip)
+                    print("Normal")
+                elif a==1:
+                    print("fin")
+                    #fin_scanning()
+                elif a==2:
+                    print("syn")
+                    #syn_scanning()
+
 
         #probing all/known ports
         if order == "random":
@@ -189,7 +136,7 @@ def probe_rand(target_ip, x):
             print("Port {}/ {}: Open".format(port, service)) #printing what ports are open 
             open_count = open_count +1 
         else:
-            print("Port {}/{}: Close".format(port, service))  #printing what ports are closed
+            #print("Port {}/{}: Close".format(port, service))  #printing what ports are closed
             close_count = close_count +1 
         sock.close()
     
@@ -220,7 +167,7 @@ def normal_scanning(x, target_ip):
             print("Port {}/ {}: Open".format(port, service)) #printing what ports are open 
             open_count = open_count +1 
         else:
-            print("Port {}/ {}: Close".format(port, service))  #printing what ports are closed
+            #print("Port {}/ {}: Close".format(port, service))  #printing what ports are closed
             close_count = close_count +1 
 
         sock.close()
@@ -231,6 +178,23 @@ def normal_scanning(x, target_ip):
     time = end_clock-start_clock
     print("Normal scannign done! IP address ({} Host up) scanned in {} seconds.\n\n\n".format(open_count, time))
 
+def fin_scan(x, target_ip):
+    #change src to your local IP and dport range to a range you wish 
+    print("TCP FIN Scanning")
+    dst = target_ip
+    ip_info = IP(src="131.229.238.101", dst ="132.229.72.13")
+    tcp_info = TCP(sport =1024, dport=range(1,10), flags="F", seq=12345)
+    packets = ip_info/tcp_info
+    p = sr(packets)
+    p.show()
+
+def syn_scan(x, target_ip):
+    print("TCP SYN Scanning")
+    ip_info = IP(dst="132.229.72.13")
+    tcp_info = TCP(sport=123,dport=(20,25),flags="S")
+    packets = ip_info/tcp_info
+    p = sr(packets)
+    p.show()
 
 main()
 
